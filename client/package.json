@@ -2,15 +2,12 @@
   "name": "client",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://lesflq.github.io/IO-24_appWEB-MaksymSevastianov-FIOT-2025",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.22.12",
