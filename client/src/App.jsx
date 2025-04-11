@@ -13,10 +13,12 @@ import MyCourses from './pages/educator/MyCourses'
 import StudentsEnrolled from './pages/educator/StudentsEnrolled'
 import LayoutWithNavbar from './LayoutWithNavbar.jsx'
 import "quill/dist/quill.snow.css";
+import { ToastContainer } from 'react-toastify';
 
 const App = () => {
   const baseUrl = import.meta.env.VITE_BASE_URL || '';
   return (
+    <>
     <Routes>
       <Route element={<LayoutWithNavbar />}>
         <Route path={`${baseUrl}`} element={<Home />} />
@@ -36,6 +38,8 @@ const App = () => {
         <Route path='student-enrolled' element={<StudentsEnrolled/>}/>
       </Route>
     </Routes>
+    <ToastContainer/>
+    </>
   )
 }
 

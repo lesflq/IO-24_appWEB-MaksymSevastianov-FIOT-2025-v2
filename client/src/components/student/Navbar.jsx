@@ -3,17 +3,40 @@ import { Link } from 'react-router-dom'
 import { assets } from '../../assets/assets'
 import { useClerk, UserButton, useUser } from '@clerk/clerk-react'
 import { AppContext } from '../../context/AppContext'
+import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const Navbar = () => {
 
-    const {navigate, isEducator} = useContext(AppContext)
+    const {navigate, isEducator, backendUrl, setIsEducator, getToken} = useContext(AppContext)
 
     const isCourseListPage=location.pathname.includes('/course-list');
 
     const {openSignIn} = useClerk()
     const {user} = useUser()
+
     const baseUrl = import.meta.env.VITE_BASE_URL || '';
 
+    const becomeEducator = async() => {
+        try {
+            if(isEducator){
+                navigate(baseUrl + '/educator')
+                return;
+            }
+            const token = await getToken()
+            const { data } = await axios.get(backendUrl + '/api/educator/update-role', {
+                headers: {Authorization: `Bearer ${token}`}
+            })
+            if(data.success){
+                setIsEducator(true)
+                toast.success(data.message)
+            } else {
+                toast.error(data.message)
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
+    }
 
   return (
     <div className={`flex items-center justify-between px-4 sm:px-10 md:px-14 lg:px-36
@@ -24,7 +47,7 @@ const Navbar = () => {
             <div className='flex items-center gap-5'>
                 { user && 
                 <>
-                    <button onClick={()=> {navigate(`${baseUrl}/educator`)}} className='cursor-pointer'>{isEducator ? 'Educator Dashboard' : 'Become Educator'}</button>
+                    <button onClick={becomeEducator} className='cursor-pointer'>{isEducator ? 'Educator Dashboard' : 'Become Educator'}</button>
                     <Link to={`${baseUrl}/my-enrollments`}>My Enrollments</Link>
                     </>}
                 </div>
@@ -35,7 +58,7 @@ const Navbar = () => {
                 <div className='flex items-center gap-1 sm:gap-2 max-sm:text-xs'>
                 { user && 
                 <>
-                    <button onClick={()=> {navigate(`${baseUrl}/educator`)}} className='cursor-pointer'>{isEducator ? 'Educator Dashboard' : 'Become Educator'}</button>
+                    <button onClick={becomeEducator} className='cursor-pointer'>{isEducator ? 'Educator Dashboard' : 'Become Educator'}</button>
                     <Link to={`${baseUrl}/my-enrollments`}>My Enrollments</Link>
                     </>}
                 </div>
